@@ -18,9 +18,25 @@ export class AuthService {
 
   constructor( private http: HttpClient ) { }
 
-  register( nombre: string, email: string, password: string) {
-    //TODO: Crear funcion de registro como tarea
-    
+  register( name: string, email: string, password: string) {
+
+    const url = `${this.baseUrl}/auth/new`;
+    const body = {
+      name, email, password
+    }
+
+    return this.http.post<AuthResponse>( url, body )
+      .pipe(
+
+        tap( ({ ok, token }) => {
+          if( ok ){
+            sessionStorage.setItem('token', token!);
+          }
+        }),
+        map( resp => resp.ok ),
+        catchError( err => of(err.error.msg) )
+
+      )
   }
 
 
@@ -35,10 +51,6 @@ export class AuthService {
         tap( resp => {
           if( resp.ok ){
             sessionStorage.setItem('token', resp.token!);
-            this._user = {
-              name: resp.name!,
-              uid: resp.uid!
-            }
           }
         }),
         map( resp => resp.ok ),
@@ -58,7 +70,8 @@ export class AuthService {
           sessionStorage.setItem('token', resp.token!);
           this._user = {
             name: resp.name!,
-            uid: resp.uid!
+            uid: resp.uid!,
+            email: resp.email!
           }
 
           return resp.ok;

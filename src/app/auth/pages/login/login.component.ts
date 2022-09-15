@@ -25,7 +25,7 @@ export class LoginComponent {
 
   login() {
 
-    console.log(this.miFormulario.value);
+    // console.log(this.miFormulario.value);
     const { email, password } = this.miFormulario.value;
 
     this.aS.login( email, password )
