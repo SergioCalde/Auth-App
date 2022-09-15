@@ -3,25 +3,29 @@ import { RouterModule, Routes } from '@angular/router';
 import { ValidarTokenGuard } from './guards/validar-token.guard';
 
 const routes: Routes = [
-
   {
-    path:'auth',
-    loadChildren: () => import('./auth/auth.module').then( m => m.AuthModule )
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path:'dashboard',
-    loadChildren: () => import('./protected/protected.module').then( m => m.ProtectedModule ),
-    canActivate: [ ValidarTokenGuard ],
-    canLoad: [ ValidarTokenGuard ]
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./protected/protected.module').then((m) => m.ProtectedModule),
+    canActivate: [ValidarTokenGuard],
+    canLoad: [ValidarTokenGuard],
   },
   {
     path: '**',
-    redirectTo: 'auth'
-  }
+    redirectTo: 'auth',
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes, {
+      useHash: false,
+    }),
+  ],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
